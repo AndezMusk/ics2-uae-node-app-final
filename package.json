@@ -1,0 +1,21 @@
+{
+  "name": "ics2-uae-node-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type" : "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "mongoose": "^8.8.4",
+    "nodemailer": "^6.9.16"
+  }
+}
