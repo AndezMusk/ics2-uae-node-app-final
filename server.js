@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose, { mongo } from "mongoose";
@@ -22,24 +23,23 @@ connectDB();
 const memberSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
-  addressLine1: String,
-  addressLine2: String,
+  address1: String,
+  address2: String,
   city: String,
   country: String,
-  stateProvince: String,
-  zipPostalCode: String,
-  schoolOrUniversity: String,
+  state: String,
+  zipCode: String,
+  school: String,
   major: String,
-  primaryPhone: String,
-  primaryEmail: String,
-  professionalAssociations: String,
+  phone: String,
+  email: String,
+  associations: String,
   certifications: String,
   feedback: String,
   date: Date,
-  agreeToTerms: Boolean,
-  email: String,
+  agreement: Boolean,
   password: String,
-  confirmPassword: String,
+  securityQuestion: String,
 });
 
 const Member = mongoose.model("Member", memberSchema);
@@ -114,38 +114,38 @@ app.post("/student-membership", async (req, res) => {
   const {
     firstName,
     lastName,
-    addressLine1,
-    addressLine2,
+    address1,
+    address2,
     city,
     country,
-    stateProvince,
-    zipPostalCode,
-    schoolOrUniversity,
+    state,
+    zipCode,
+    school,
     major,
-    primaryPhone,
-    primaryEmail,
-    professionalAssociations,
+    phone,
+    email,
+    associations,
     certifications,
     feedback,
     date,
-    agreeToTerms,
-    email,
     password,
     confirmPassword,
-    securityQuestionAnswer,
+    securityQuestion,
   } = req.body;
+
+  const agreement = req.body.aggrement === "on";
 
   // Validate input
   if (
     !firstName ||
     !lastName ||
-    !addressLine1 ||
+    !address1 ||
     !city ||
     !country ||
     !email ||
     !password ||
     !confirmPassword ||
-    !securityQuestionAnswer
+    !securityQuestion
   ) {
     return res.status(400).send("All fields with * are required!");
   }
@@ -155,32 +155,32 @@ app.post("/student-membership", async (req, res) => {
     return res.status(400).send("Passwords do not match");
   }
 
-  // Create a new member object
-  const newMember = new Member({
-    firstName,
-    lastName,
-    addressLine1,
-    addressLine2,
-    city,
-    country,
-    stateProvince,
-    zipPostalCode,
-    schoolOrUniversity,
-    major,
-    primaryPhone,
-    primaryEmail,
-    professionalAssociations,
-    certifications,
-    feedback,
-    date,
-    agreeToTerms,
-    email,
-    password, // In a real-world scenario, hash this password using bcrypt
-    confirmPassword,
-    securityQuestionAnswer,
-  });
-
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new member object
+    const newMember = new Member({
+      firstName,
+      lastName,
+      address1,
+      address2,
+      city,
+      country,
+      state,
+      zipCode,
+      school,
+      major,
+      phone,
+      email,
+      associations,
+      certifications,
+      feedback,
+      date,
+      agreement,
+      password: hashedPassword,
+      securityQuestion,
+    });
+
     // Save the member to the database
     await newMember.save();
 
@@ -205,8 +205,8 @@ app.post("/student-membership", async (req, res) => {
                     <div style="padding: 20px;">
                         <p><strong>Name:</strong> ${firstName} ${lastName}</p>
                         <p><strong>Email:</strong> ${email}</p>
-                        <p><strong>Phone:</strong> ${primaryPhone}</p>
-                        <p><strong>School/University:</strong> ${schoolOrUniversity}</p>
+                        <p><strong>Phone:</strong> ${phone}</p>
+                        <p><strong>School/University:</strong> ${school}</p>
                         <p><strong>Feedback:</strong> ${feedback}</p>
                     </div>
                     <div style="background-color: #f1f1f1; padding: 10px; text-align: center; font-size: 12px; color: #666;">
