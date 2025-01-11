@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import { configDotenv } from "dotenv";
 import nodemailer from "nodemailer";
 configDotenv();
@@ -21,25 +21,22 @@ const connectDB = async () => {
 connectDB();
 
 const memberSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  address1: String,
-  address2: String,
-  city: String,
-  country: String,
-  state: String,
-  zipCode: String,
-  school: String,
-  major: String,
-  phone: String,
-  email: String,
-  associations: String,
-  certifications: String,
-  feedback: String,
-  date: Date,
-  agreement: Boolean,
-  password: String,
-  securityQuestion: String,
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  address1: { type: String, required: true },
+  address2: { type: String },
+  city: { type: String, required: true },
+  country: { type: String, required: true },
+  state: { type: String, required: true },
+  zipCode: { type: String, required: true },
+  isMember: { type: String, required: true },
+  memberId: { type: String },
+  title: { type: String, required: true },
+  employer: { type: String, required: true },
+  primaryPhone: { type: String, required: true },
+  primaryEmail: { type: String, required: true },
+  secondaryEmail: { type: String },
+  professionalAssociations: { type: String },
 });
 
 const Member = mongoose.model("Member", memberSchema);
@@ -107,78 +104,65 @@ app
     }
   });
 
-app.route("/student-membership").get((req, res) => {
-  res.render("student_membership", { title: "Student Membership" });
+app.route("/membership").get((req, res) => {
+  res.render("membership", { title: "Student Membership" });
 });
-app.post("/student-membership", async (req, res) => {
+app.post("/membership", async (req, res) => {
   const {
-    firstName,
-    lastName,
-    address1,
-    address2,
+    first_name,
+    last_name,
+    address_line1,
+    address_line2,
     city,
     country,
     state,
-    zipCode,
-    school,
-    major,
-    phone,
-    email,
-    associations,
-    certifications,
-    feedback,
-    date,
-    password,
-    confirmPassword,
-    securityQuestion,
+    zip_code,
+    is_member,
+    member_id,
+    title,
+    employer,
+    primary_phone,
+    primary_email,
+    secondary_email,
+    professional_associations,
   } = req.body;
-
-  const agreement = req.body.aggrement === "on";
 
   // Validate input
   if (
-    !firstName ||
-    !lastName ||
-    !address1 ||
+    !first_name ||
+    !last_name ||
+    !address_line1 ||
     !city ||
     !country ||
-    !email ||
-    !password ||
-    !confirmPassword ||
-    !securityQuestion
+    !state ||
+    !zip_code ||
+    !title ||
+    !employer ||
+    !primary_phone ||
+    !primary_email
   ) {
     return res.status(400).send("All fields with * are required!");
   }
 
-  // Check if passwords match
-  if (password !== confirmPassword) {
-    return res.status(400).send("Passwords do not match");
-  }
-
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create a new member object
     const newMember = new Member({
-      firstName,
-      lastName,
-      address1,
-      address2,
-      city,
-      country,
-      state,
-      zipCode,
-      school,
-      major,
-      phone,
-      email,
-      associations,
-      certifications,
-      feedback,
-      date,
-      agreement,
-      password: hashedPassword,
-      securityQuestion,
+      firstName: first_name,
+      lastName: last_name,
+      address1: address_line1,
+      address2: address_line2,
+      city: city,
+      country: country,
+      state: state,
+      zipCode: zip_code,
+      isMember: is_member,
+      memberId: member_id,
+      title,
+      employer,
+      primaryPhone: primary_phone,
+      primaryEmail: primary_email,
+      secondaryEmail: secondary_email,
+      professionalAssociations: professional_associations,
     });
 
     // Save the member to the database
@@ -199,15 +183,17 @@ app.post("/student-membership", async (req, res) => {
       subject: "New Member Submission",
       html: `
                 <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; color: #333; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                    <div style="background-color: #4CAF50; padding: 20px; text-align: center; color: white;">
-                        <h1 style="margin: 0; font-size: 24px;">New Member Registration</h1>
-                    </div>
+        <div style="background-color: #4CAF50; padding: 20px; text-align: center; color: white;">
+            <img src=${"https://isc2chapter-uae.org/test/logo.png"} alt="Logo" style="width: 120px; margin-bottom: 10px;">
+            <h1 style="margin: 0; font-size: 24px;">New Form Submission</h1>
+        </div>
                     <div style="padding: 20px;">
-                        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-                        <p><strong>Email:</strong> ${email}</p>
-                        <p><strong>Phone:</strong> ${phone}</p>
-                        <p><strong>School/University:</strong> ${school}</p>
-                        <p><strong>Feedback:</strong> ${feedback}</p>
+                        <p><strong>Name:</strong> ${first_name} ${last_name}</p>
+                        <p><strong>Email:</strong> ${primary_email}</p>
+                        <p><strong>Phone:</strong> ${primary_phone}</p>
+                        <p><strong>Title:</strong> ${title}</p>
+                        <p><strong>Employer:</strong> ${employer}</p>
+                        <p><strong>Country:</strong> ${country}</p>
                     </div>
                     <div style="background-color: #f1f1f1; padding: 10px; text-align: center; font-size: 12px; color: #666;">
                         <p style="margin: 0;">Thank you for your submission!</p>
