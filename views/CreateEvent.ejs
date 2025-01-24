@@ -1,0 +1,30 @@
+<%- include("partials/AdminHeader") -%>
+    <div class="wrapper">
+        <form action="/admin/create-event" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <input class="form-control" type="text" name="eventName" placeholder="Event Name" required />
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" name="eventDescription" placeholder="Event Description"
+                    required></textarea>
+
+            </div>
+            <div class="form-group">
+
+                <input class="form-control" type="text" name="eventVenue" placeholder="Event Venue" required />
+
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="datetime-local" name="eventDateTime" required />
+            </div>
+
+            <div class="form-group">
+                <input class="form-control" type="file" name="eventImage" accept="image/*" required />
+            </div>
+
+            <button class="btn btn-success btn-block" type="submit">Create Event</button>
+        </form>
+
+    </div>
+
+    <%- include("partials/footer") -%>
