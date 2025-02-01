@@ -7,9 +7,12 @@ import session from "express-session";
 import passport from "passport";
 import multer from "multer";
 import path from "path";
+import bcrypt from "bcrypt"; // Hash passwords
+
 import "./config/passport.js"; // Passport configuration
 import adminRoutes from "./routes/admin.js"; // Admin-related routes
 import authRoutes from "./routes/auth.js"; // Auth-related routes
+import Member from "./models/Member.js"; // ✅ Import Member Model
 
 configDotenv();
 const app = express();
@@ -61,15 +64,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Routes
+// Debug Middleware
+app.use((req, res, next) => {
+  console.log(req.url, req.isAuthenticated());
+  next();
+});
+
+// ✅ Routes
 app.use("/admin", adminRoutes);
 app.use("/admin", authRoutes);
 
-// Public Routes
+// Home Route
 app.get("/", (req, res) => {
   res.render("home", { title: "Home" });
 });
 
+// Contact Route
 app
   .route("/contact")
   .get((req, res) => {
@@ -111,56 +121,64 @@ app
     }
   });
 
-// Membership Form Submission
+// ✅ Membership Form Submission Route
 app
   .route("/membership")
   .get((req, res) => {
     res.render("membership", { title: "Membership Form" });
   })
   .post(upload.single("profilePicture"), async (req, res) => {
-    const {
-      first_name,
-      last_name,
-      address_line1,
-      address_line2,
-      city,
-      country,
-      state,
-      zip_code,
-      is_member,
-      member_id,
-      title,
-      employer,
-      primary_phone,
-      primary_email,
-      secondary_email,
-      professional_associations,
-    } = req.body;
-
-    if (
-      !first_name ||
-      !last_name ||
-      !address_line1 ||
-      !city ||
-      !country ||
-      !state ||
-      !zip_code ||
-      !title ||
-      !employer ||
-      !primary_phone ||
-      !primary_email
-    ) {
-      return res.status(400).send("All required fields must be filled!");
-    }
-
     try {
+      const {
+        first_name,
+        last_name,
+        address_line1,
+        address_line2,
+        city,
+        country,
+        state,
+        zip_code,
+        is_member,
+        member_id,
+        title,
+        employer,
+        primary_phone,
+        primary_email,
+        secondary_email,
+        professional_associations,
+        password, // ✅ Added password field
+      } = req.body;
+
+      // Required fields validation
+      if (
+        !first_name ||
+        !last_name ||
+        !address_line1 ||
+        !city ||
+        !country ||
+        !state ||
+        !zip_code ||
+        !title ||
+        !employer ||
+        !primary_phone ||
+        !primary_email ||
+        !password // ✅ Ensure password is provided
+      ) {
+        return res.status(400).send("All required fields must be filled!");
+      }
+
+      // Check if email already exists
+      const existingMember = await Member.findOne({
+        primaryEmail: primary_email,
+      });
+      if (existingMember) {
+        return res.status(400).send("Email already registered!");
+      }
+
+      // Hash password before saving
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       // Create a new member document
-      const Member = mongoose.model(
-        "Member",
-        new mongoose.Schema({
-          /* Member Schema */
-        })
-      );
       const newMember = new Member({
         firstName: first_name,
         lastName: last_name,
@@ -170,8 +188,8 @@ app
         country,
         state,
         zipCode: zip_code,
-        isMember: is_member,
-        memberId: member_id,
+        isMember: is_member || false,
+        memberId: member_id || `MEM${Date.now()}`, // ✅ Auto-generate member ID if not provided
         title,
         employer,
         primaryPhone: primary_phone,
@@ -179,6 +197,7 @@ app
         secondaryEmail: secondary_email,
         professionalAssociations: professional_associations,
         profilePicture: req.file ? req.file.path : null,
+        password: hashedPassword, // ✅ Store hashed password
       });
 
       await newMember.save();
@@ -188,6 +207,19 @@ app
       res.status(500).send("Failed to submit the form.");
     }
   });
+
+// ✅ Logout Route
+app.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    res.redirect("/");
+  });
+});
+
+// ✅ 404 Page Route
+app.use((req, res) => {
+  res.status(404).send("Page Not Found");
+});
 
 // Server Listener
 app.listen(PORT, () => {

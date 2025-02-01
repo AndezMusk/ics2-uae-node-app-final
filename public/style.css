@@ -13,7 +13,7 @@ p {
 }
 
 .navi {
-  padding: 2rem 4rem;
+  padding: 1rem 4rem;
 }
 .navi .nav-item {
   margin-right: 2rem;
@@ -41,6 +41,9 @@ p {
   background-size: cover;
   background-repeat: no-repeat;
   color: white;
+}
+.logo-image {
+  height: 65px;
 }
 
 .header h1 {
@@ -351,6 +354,13 @@ p {
 
 #contact-info .row {
   justify-content: space-between;
+}
+
+.admin_dashboard p {
+  margin: 0;
+}
+.admin_dashboard .row {
+  align-items: center;
 }
 
 /* media queries */

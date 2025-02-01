@@ -5,42 +5,53 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true, unqiue: true },
+  name: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, default: "user" },
 });
 
-const User = mongoose.model("User", userSchema);
+const Admin = mongoose.model("Admin", userSchema);
 
 const createAdmin = async () => {
   const dbURI = process.env.MONGO_URI || "mongodb://localhost:27017/isc2uaeDB";
   try {
     await mongoose.connect(dbURI);
     console.log("Connected to database");
-    const username = "admin";
-    const email = "admin@example.com";
-    const password = "yourSecurePassword";
 
-    const existingAdmin = await User.findOne({ email });
+    const name = "admin";
+    const username = "admin@example.com";
+    const password = "helloworld";
+
+    const existingAdmin = await Admin.findOne({ username });
     if (existingAdmin) {
-      console.log("Admin User Already Exists.");
+      console.log(`Admin User Already Exists: ${existingAdmin.username}`);
       return;
     }
 
+    console.log("Hashing password...");
     const hashedPassword = await bcrypt.hash(password, 10);
-    const admin = new User({
+    console.log("Password hashed.");
+
+    const admin = new Admin({
+      name,
       username,
-      email,
       password: hashedPassword,
       role: "admin",
     });
+
     await admin.save();
-    console.log("Admin user created succesfully.");
+    console.log("Admin user created successfully.");
   } catch (error) {
-    console.error("Error Creating admin user :", error);
+    console.error("Error creating admin user:", error);
   } finally {
-    mongoose.connection.close();
+    try {
+      console.log("Closing database connection...");
+      await mongoose.connection.close();
+      console.log("Database connection closed.");
+    } catch (err) {
+      console.error("Error closing database connection:", err);
+    }
   }
 };
 

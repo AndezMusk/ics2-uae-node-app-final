@@ -13,7 +13,6 @@ router.post(
   passport.authenticate("local", {
     successRedirect: "/admin/dashboard",
     failureRedirect: "/admin/login",
-    failureFlash: true,
   })
 );
 
