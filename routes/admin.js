@@ -38,6 +38,18 @@ router.get("/create-event", ensureAuthenticated, (req, res) => {
   res.render("CreateEvent", { title: "Create Event" });
 });
 
+// Delete Event
+router.get("/delete-event/:id", async (req, res) => {
+  console.log(req.params.id);
+  try {
+    const event = await Event.findByIdAndDelete(req.params.id);
+    res.redirect("/admin/dashboard");
+  } catch (error) {
+    console.error("Error Deleting event:", error);
+    res.status(500).send("Error Deleting event. Please try again.");
+  }
+});
+
 // Create event route (POST)
 router.post(
   "/create-event",

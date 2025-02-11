@@ -13,6 +13,7 @@ import "./config/passport.js"; // Passport configuration
 import adminRoutes from "./routes/admin.js"; // Admin-related routes
 import authRoutes from "./routes/auth.js"; // Auth-related routes
 import Member from "./models/Member.js"; // ✅ Import Member Model
+import Event from "./models/Event.js";
 
 configDotenv();
 const app = express();
@@ -127,7 +128,7 @@ app
   .get((req, res) => {
     res.render("membership", { title: "Membership Form" });
   })
-  .post(upload.single("profilePicture"), async (req, res) => {
+  .post(async (req, res) => {
     try {
       const {
         first_name,
@@ -146,10 +147,10 @@ app
         primary_email,
         secondary_email,
         professional_associations,
-        password, // ✅ Added password field
+        password, // ✅ Password included
       } = req.body;
 
-      // Required fields validation
+      // Validate required fields
       if (
         !first_name ||
         !last_name ||
@@ -162,7 +163,7 @@ app
         !employer ||
         !primary_phone ||
         !primary_email ||
-        !password // ✅ Ensure password is provided
+        !password
       ) {
         return res.status(400).send("All required fields must be filled!");
       }
@@ -189,24 +190,78 @@ app
         state,
         zipCode: zip_code,
         isMember: is_member || false,
-        memberId: member_id || `MEM${Date.now()}`, // ✅ Auto-generate member ID if not provided
+        memberId: member_id || `MEM${Date.now()}`, // Auto-generate member ID if not provided
         title,
         employer,
         primaryPhone: primary_phone,
         primaryEmail: primary_email,
         secondaryEmail: secondary_email,
         professionalAssociations: professional_associations,
-        profilePicture: req.file ? req.file.path : null,
         password: hashedPassword, // ✅ Store hashed password
       });
 
       await newMember.save();
-      res.status(201).send("Membership form submitted successfully!");
+
+      // ✅ Send email notification to the admin
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL, // Your email
+          pass: process.env.EMAIL_PASSWORD, // Your email password or app-specific password
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: "webigeeksofficial@gmail.com",
+        subject: "New Member Submission",
+        html: `
+          <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; color: #333; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div style="background-color: #4CAF50; padding: 20px; text-align: center; color: white;">
+              <img src=${"https://isc2chapter-uae.org/test/logo.png"} alt="Logo" style="width: 120px; margin-bottom: 10px;">
+              <h1 style="margin: 0; font-size: 24px;">New Form Submission</h1>
+            </div>
+            <div style="padding: 20px;">
+              <p><strong>Name:</strong> ${first_name} ${last_name}</p>
+              <p><strong>Email:</strong> ${primary_email}</p>
+              <p><strong>Phone:</strong> ${primary_phone}</p>
+              <p><strong>Title:</strong> ${title}</p>
+              <p><strong>Employer:</strong> ${employer}</p>
+              <p><strong>Country:</strong> ${country}</p>
+            </div>
+            <div style="background-color: #f1f1f1; padding: 10px; text-align: center; font-size: 12px; color: #666;">
+              <p style="margin: 0;">Thank you for your submission!</p>
+              <p style="margin: 5px 0;">&copy; ${new Date().getFullYear()} WebiGeeks</p>
+            </div>
+          </div>
+        `,
+      };
+
+      // Send the email
+      await transporter.sendMail(mailOptions);
+      res
+        .status(201)
+        .send("Membership form submitted successfully, and email sent!");
     } catch (err) {
-      console.error("Error saving membership form:", err.message);
-      res.status(500).send("Failed to submit the form.");
+      console.error(
+        "Error saving membership form or sending email:",
+        err.message
+      );
+      res.status(500).send("Failed to submit the form or send the email.");
     }
   });
+
+app.route("/events").get(async (req, res) => {
+  try {
+    const events = await Event.find({});
+    res.render("Events", {
+      title: "Events",
+      events: events.length > 0 && events,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+});
 
 // ✅ Logout Route
 app.get("/logout", (req, res, next) => {

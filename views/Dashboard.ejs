@@ -1,49 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    <%= title %>
-  </title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="/style.css" rel="stylesheet" />
-</head>
-
-<body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Admin Dashboard</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/admin/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+<%- include("partials/AdminHeader") -%>
 
   <!-- Main Dashboard Content -->
-  <div class="container mt-4 admin_dashboard">
-    <h1 class="text-center mb-4">Welcome to Admin Dashboard</h1>
+  <div class="container mt-5 admin_dashboard">
+    <h1 class="text-center mb-5">Welcome to Admin Dashboard</h1>
     <div class="row align-items-center">
       <!-- Events Count Card -->
       <div class="col-md-4">
         <div class="card text-white bg-primary mb-4">
           <div class="card-header">Total Events</div>
           <div class="card-body">
-            <h5 class="card-title">
+            <h5 class="card-title level2">
               <%= eventCount %>
             </h5>
-            <p class="card-text">Total number of events created.</p>
           </div>
         </div>
       </div>
@@ -52,10 +20,9 @@
         <div class="card text-white bg-success mb-4">
           <div class="card-header">Total Members</div>
           <div class="card-body">
-            <h5 class="card-title">
+            <h5 class="card-title level2">
               <%= memberCount %>
             </h5>
-            <p class="card-text">Total registered members in your platform.</p>
           </div>
         </div>
       </div>
@@ -81,13 +48,21 @@
         <!-- Example: -->
         <ul class="list-group">
           <% events.forEach(event=> { %>
-            <li class="list-group-item">
-              <strong>
-                <%= event.eventName %>
-              </strong>
-              <p>
-                <%= event.eventDescription %>
-              </p>
+            <li class="list-group-item admin-event-list-item ">
+              <div class="row justify-content-between align-items-center">
+                <div class="col-lg-2">
+                  <img src="/<%= event.eventImage  %>" alt="<%= event.eventName%>">
+                </div>
+                <div class="col-lg-8">
+                  <strong>
+                    <%= event.eventName %>
+                  </strong>
+                  <p>
+                    <%= event.eventDescription %>
+                  </p>
+                </div>
+                <a href="/admin/delete-event/<%=event.id%>" class="btn btn-sm btn-danger">Delete</a>
+              </div>
             </li>
             <% }) %>
         </ul>
@@ -97,6 +72,6 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  </body>
 
-</html>
+  </html>

@@ -12,6 +12,10 @@ p {
   font-size: 1.1rem;
 }
 
+.level2 {
+  font-size: 3rem;
+}
+
 .navi {
   padding: 1rem 4rem;
 }
@@ -356,11 +360,54 @@ p {
   justify-content: space-between;
 }
 
+.create-event {
+  box-shadow: 0 0 10px 0 #ccc;
+  border-radius: 10px;
+  margin-bottom: 3rem;
+  padding: 2rem 4rem;
+  border: 0.5px solid #ccc;
+}
+
+.admin_dashboard {
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 4px 0 #000;
+  margin-bottom: 4rem;
+}
 .admin_dashboard p {
   margin: 0;
 }
 .admin_dashboard .row {
   align-items: center;
+}
+
+.event-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+.event-card:hover {
+  transform: translateY(-5px);
+}
+.event-img {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.event-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #343a40;
+}
+.event-date {
+  font-size: 1rem;
+  color: #6c757d;
+}
+.event-description {
+  font-size: 0.95rem;
+  color: #495057;
 }
 
 /* media queries */
@@ -434,5 +481,116 @@ p {
 
   .requirment ul {
     padding: 20px;
+  }
+}
+
+/* Custom File Upload Styling */
+
+.create-event form {
+  margin-top: 2rem !important;
+}
+.event-form-file {
+  display: none; /* Hide the default file input */
+}
+
+.custom-file-upload {
+  display: inline-block;
+  background-color: #00aeef;
+  color: white;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background-color: #037aa2;
+  transform: translateY(-5px);
+}
+
+.custom-file-upload i {
+  margin-right: 8px;
+  font-size: 1.3rem;
+}
+
+.custom-file-upload:active {
+  transform: translateY(0);
+}
+
+/* Styling the file input label and button interaction */
+.event-form-group {
+  position: relative;
+}
+
+.event-form-input,
+.event-form-textarea {
+  margin-bottom: 20px;
+}
+
+/* Form Title Styling */
+.form-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* General Styling */
+.event-form-group input,
+.event-form-group textarea {
+  border-radius: 4px;
+
+  padding: 20px 15px;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Focused Input/Textarea fields */
+.event-form-group input:focus,
+.event-form-group textarea:focus {
+  border-color: #037aa2;
+  outline: none;
+}
+
+/* Button Styling */
+.event-form-button {
+  font-size: 1.2rem;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.event-form-button:hover {
+  background-color: #45a049;
+  transform: translateY(-5px);
+}
+
+.admin-event-list-item img {
+  width: 100%;
+  box-shadow: 0 0 10px 0 #ccc;
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 2rem;
+  }
+
+  .event-form-button {
+    font-size: 1rem;
+    padding: 12px 25px;
+  }
+
+  .form-title {
+    font-size: 2rem;
+  }
+
+  .event-form-group input,
+  .event-form-group textarea {
+    font-size: 1rem;
+    padding: 12px;
   }
 }
