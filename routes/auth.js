@@ -5,7 +5,7 @@ const router = express.Router();
 
 // login form
 router.get("/login", (req, res) => {
-  res.render("login", { title: "Admin Login" });
+  res.render("Login", { title: "Admin Login" });
 });
 
 router.post(
