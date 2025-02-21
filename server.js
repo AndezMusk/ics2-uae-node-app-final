@@ -263,6 +263,18 @@ app.route("/events").get(async (req, res) => {
   }
 });
 
+app.get("/about", (req, res) => {
+  res.render("about", {
+    title: "About",
+  });
+});
+
+app.get("/sponsorship", (req, res) => {
+  res.render("sponsorship", {
+    title: "About",
+  });
+});
+
 // ✅ Logout Route
 app.get("/logout", (req, res, next) => {
   req.logout((err) => {

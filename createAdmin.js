@@ -14,7 +14,10 @@ const userSchema = new mongoose.Schema({
 const Admin = mongoose.model("Admin", userSchema);
 
 const createAdmin = async () => {
-  const dbURI = process.env.MONGO_URI || "mongodb://localhost:27017/isc2uaeDB";
+  const dbURI =
+    process.env.MONGO_URI ||
+    "mongodb+srv://Admin-Rohan:adminrohansharma@cluster0.2vxj1.mongodb.net/isc2uaeDB";
+  // "mongodb://localhost:27017/isc2uaeDB";
   try {
     await mongoose.connect(dbURI);
     console.log("Connected to database");
