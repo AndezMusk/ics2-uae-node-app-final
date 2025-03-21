@@ -269,11 +269,49 @@ app.get("/about", (req, res) => {
   });
 });
 
-app.get("/sponsorship", (req, res) => {
-  res.render("sponsorship", {
-    title: "About",
+app
+  .route("/sponsorship")
+  .get((req, res) => {
+    res.render("sponsorship", {
+      title: "About",
+    });
+  })
+  .post(async (req, res) => {
+    const { company_name, company_email, subject, message } = req.body;
+
+    if (!company_name || !company_email || !subject || !message) {
+      return res.status(400).send("All fields are required.");
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: "webigeeksofficial@gmail.com",
+      subject: `Contact Form Submission: ${subject}`,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Company Name:</strong> ${company_name}</p>
+        <p><strong>Company Email:</strong> ${company_email}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong> ${message}</p>
+      `,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).send("Message sent successfully.");
+    } catch (error) {
+      console.error("Error sending email:", error.message);
+      res.status(500).send("Failed to send the message.");
+    }
   });
-});
 
 // ✅ Logout Route
 app.get("/logout", (req, res, next) => {
