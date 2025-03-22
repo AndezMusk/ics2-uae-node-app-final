@@ -17,12 +17,10 @@ const MemberSchema = new mongoose.Schema(
     primaryEmail: { type: String, required: true, unique: true },
     secondaryEmail: { type: String },
 
-    isMember: { type: Boolean, default: false },
-    memberId: { type: String, unique: true }, // Unique Membership ID
+    // isMember: { type: Boolean, default: false },
+    // memberId: { type: String, unique: true }, // Unique Membership ID
 
     professionalAssociations: { type: String },
-
-    password: { type: String, required: true }, // Hashed password for login
   },
   { timestamps: true }
 );

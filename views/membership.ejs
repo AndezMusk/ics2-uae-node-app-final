@@ -1,4 +1,5 @@
 <%- include("partials/header.ejs") -%>
+
   <div id="membership" class="wrapper text-center header">
     <h1>MEMBERSHIP</h1>
   </div>
@@ -96,12 +97,6 @@
   <div class="row">
     <div class="form col">
       <h2>Membership Application</h2>
-      <p class="highlight">
-        If you are a student, please use this link:
-        <a href="
-                " class="text-dark">Student Membership Application</a>
-      </p>
-      <p>Terms: $40 / Year</p>
       <form action="/membership" method="POST">
         <div class="form-group">
           <label for="firstName">First Name:*</label>
@@ -144,7 +139,8 @@
           <label for="zipCode">Zip/Postal Code:*</label>
           <input type="text" class="form-control" name="zip_code" id="zipCode" required />
         </div>
-        <div class="form-group">
+
+        <!-- <div class="form-group">
           <label>Are you a member of (ISC)²?*</label><br />
           <div class="form-check">
             <input class="form-check-input" type="radio" name="is_member" id="isMemberYes" value="yes" required />
@@ -158,7 +154,8 @@
         <div class="form-group">
           <label for="memberId">Member ID:</label>
           <input type="text" class="form-control" name="member_id" id="memberId" />
-        </div>
+        </div> -->
+
         <div class="form-group">
           <label for="title">Title:*</label>
           <input type="text" class="form-control" name="title" id="title" required />
@@ -183,99 +180,10 @@
           <label for="professionalAssociations">List other professional associations you are a member of:</label>
           <textarea class="form-control" name="professional_associations" id="professionalAssociations"></textarea>
         </div>
-        <div class="form-group">
-          <label for="password">Password :</label>
-          <textarea class="form-control" name="password" id="password"></textarea>
-        </div>
+
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 
     </div>
-    <div class="qa col">
-      <h2>Additional Information</h2>
-      <p>
-        Membership dues are to be paid upon completing the membership
-        application. You will be redirected to PayPal for payment processing.
-      </p>
-      <b>
-        <h2 style="background-color: #61ce70; color: white" class="highlight">
-          $40/yr
-        </h2>
-      </b>
-    </div>
   </div>
-  <div class="footer wrapper" style="background-color: #081726;">
-    <div class="row">
-      <div class="col">
-        <a href=""><i class="fa-solid fa-square-rss" style="color: #ff7300;"></i></a>&nbsp;<b><a href=""
-            style="color: white;">Feeds</a></b>
-        <hr>
-        <ul>
-          <li style="color: #081726;"><a href="" style="color: white;">Student Loan Breach Exposes 2.5M<br> Records</a>
-          </li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Watering Hole Attacks Push ScanBox
-              <br>Keylogger</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Tentacles of `0ktapus' Threat Group<br> Victimize
-              130 Firms</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Ransomware Attacks are on the Rise</a></li>
-          <hr>
-        </ul>
-      </div>
-      <div class="col">
-        <b style="color: #097051;">Useful Pages</b>
-        <hr>
-        <ul>
-          <li style="color: #081726;"><a href="" style="color: white;">Home</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">About</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Membership</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Events</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Blog</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Contact</a></li>
-          <hr>
-        </ul>
-      </div>
-      <div class="col">
-        <b style="color: #097051;">Contact Information</b><br>
-        <hr>
-        <a href="" style="color: white;">www.isc2chapter-liny.org</a>
-      </div>
-      <div class="col">
-        <b style="color: #097051;">Recent Posts</b>
-        <hr>
-        <ul>
-          <li style="color: #081726;"><a href="" style="color: white;">(ISC)2 Long Island NY Holds 3rd Annual<br> CTF
-              Event!</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Let's Capture The Flag!</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Security Awareness - Creative<br> Techniques and
-              Tools</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Security Operations Briefing and Panel<br>
-              Discussion: Current Realities and The<br> Strategic Landscape</a></li>
-          <hr>
-          <li style="color: #081726;"><a href="" style="color: white;">Meeting - Proactive Defense in Lieu of<br>
-              Panicked Response</a></li>
-          <hr>
-
-        </ul>
-      </div>
-    </div>
-  </div>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
-    crossorigin="anonymous"></script>
-  </body>
-
-  </html>
+  <%- include("partials/footer.ejs") -%>

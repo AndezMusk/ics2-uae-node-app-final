@@ -139,15 +139,14 @@ app
         country,
         state,
         zip_code,
-        is_member,
-        member_id,
+        // is_member,
+        // member_id,
         title,
         employer,
         primary_phone,
         primary_email,
         secondary_email,
         professional_associations,
-        password, // ✅ Password included
       } = req.body;
 
       // Validate required fields
@@ -162,9 +161,9 @@ app
         !title ||
         !employer ||
         !primary_phone ||
-        !primary_email ||
-        !password
+        !primary_email
       ) {
+        console.log(req.body, "validation failed");
         return res.status(400).send("All required fields must be filled!");
       }
 
@@ -177,7 +176,7 @@ app
       }
 
       // Hash password before saving
-      const hashedPassword = await bcrypt.hash(password, 10);
+      // const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create a new member document
       const newMember = new Member({
@@ -189,15 +188,14 @@ app
         country,
         state,
         zipCode: zip_code,
-        isMember: is_member || false,
-        memberId: member_id || `MEM${Date.now()}`, // Auto-generate member ID if not provided
+        // isMember: is_member || false,
+        // memberId: member_id || `MEM${Date.now()}`, // Auto-generate member ID if not provided
         title,
         employer,
         primaryPhone: primary_phone,
         primaryEmail: primary_email,
         secondaryEmail: secondary_email,
         professionalAssociations: professional_associations,
-        password: hashedPassword, // ✅ Store hashed password
       });
 
       await newMember.save();
